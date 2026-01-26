@@ -32,33 +32,24 @@ jobs:
       SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
     steps:
-      # 1️⃣ Checkout repo
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2️⃣ Set up Python
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
 
-      # 3️⃣ Install backend dependencies
       - name: Install backend dependencies
         run: |
           cd backend
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Run backend tests
       - name: Run backend tests
         run: |
           cd backend
           pytest
 
-      # 5️⃣ Build Docker images for backend + frontend
       - name: Build Docker images
         run: docker-compose -f docker-compose.yml build
-
-      # 6️⃣ Optional deployment (for later)
-      #- name: Deploy to EC2
-      #  run: echo "Add deployment commands here"
