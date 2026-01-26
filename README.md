@@ -8,7 +8,7 @@ This project demonstrates a modern full-stack setup with containerization, autom
 
 ## Features
 
-- Add, update, and delete tasks
+- Add and delete tasks
 - Mark tasks as **complete** or **incomplete**
 - Modern UI with **Streamlit** and **TailwindCSS**
 - Backend powered by **FastAPI** and **PostgreSQL**
