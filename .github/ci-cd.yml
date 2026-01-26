@@ -1,0 +1,62 @@
+name: CI/CD Pipeline
+
+# Trigger on push or pull request to main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # Services your app needs to run tests
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tasks_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # 1️⃣ Checkout your code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2️⃣ Set up Python for backend
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      # 3️⃣ Install backend dependencies
+      - name: Install backend dependencies
+        run: |
+          cd backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4️⃣ Run backend tests
+      - name: Run backend tests
+        run: |
+          cd backend
+          pytest
+
+      # 5️⃣ Build Docker images for backend + frontend
+      - name: Build Docker images
+        run: docker-compose -f docker-compose.yml build
+
+      # 6️⃣ Optional: deploy (for later)
+      #- name: Deploy to server
+      #  run: echo "Add deployment steps here"
